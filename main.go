@@ -17,13 +17,28 @@ var (
 	flagOnly4    = flag.Bool("ipv4", false, "only IPv4")
 	flagOnly6    = flag.Bool("ipv6", false, "only IPv6")
 	flagFormat6  = flag.Bool("format6", false, "URL friendly IPv6")
-	flagWithHost = flag.Bool("host", false, "print host for IP")
+	flagWithHost = flag.Bool("host", false, "print host too")
 )
 
 type Probe struct {
 	lookupFunc func(string) ([]net.IP, error)
 	reader     io.Reader
 	writer     io.Writer
+}
+
+func main() {
+	flag.Parse()
+	if *flagProcs < 1 {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
+	probe := Probe{
+		lookupFunc: net.LookupIP,
+		reader:     os.Stdin,
+		writer:     os.Stdout,
+	}
+	run(probe)
 }
 
 func (obj Probe) printIP(ip, host string) {
@@ -57,21 +72,6 @@ func (obj Probe) Process(url string) {
 		}
 		obj.printIP(ip.String(), url)
 	}
-}
-
-func main() {
-	flag.Parse()
-	if *flagProcs < 1 {
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
-
-	probe := Probe{
-		lookupFunc: net.LookupIP,
-		reader:     os.Stdin,
-		writer:     os.Stdout,
-	}
-	run(probe)
 }
 
 func run(probe Probe) {
