@@ -51,8 +51,9 @@ func (obj Probe) printIP(ip, host string) {
 
 func (obj Probe) Process(url string) {
 	if strings.HasPrefix(url, "http") {
-		url = strings.TrimLeft(url, "http://")
-		url = strings.TrimLeft(url, "https://")
+		for _, sch := range [2]string{"http://", "https://"} {
+			url = strings.TrimLeft(url, sch)
+		}
 	}
 	ips, err := obj.lookupFunc(url)
 	if err != nil || len(ips) == 0 {
