@@ -5,7 +5,7 @@ Lookup IP tool
 ### Installation and Upgrading
 
 ```bash
-go install github.com/vodafon/ipprobe@latest
+go install github.com/vodafon/ipprobe@v1.0.2
 ```
 
 ### Arguments
